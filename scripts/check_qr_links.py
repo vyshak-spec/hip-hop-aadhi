@@ -15,20 +15,20 @@ import sys
 import urllib.request
 
 QR_PATHS = [
-    "hiphop-aadhi/mip-elite-pass",
-    "hiphop-aadhi/vvip-pass",
-    "hiphop-aadhi/fanpit-pass",
-    "hiphop-aadhi/gold-pass",
-    "hiphop-aadhi/silver-pass",
+    "star-galatta/mip-elite-pass",
+    "star-galatta/vvip-pass",
+    "star-galatta/fanpit-pass",
+    "star-galatta/gold-pass",
+    "star-galatta/silver-pass",
 ]
 
 # SHA-256 of each frozen QR image (each encodes https://events.iqtechmax.com/<path>).
 QR_LOCK = {
-    "qr_mip-elite-pass.png": "4d228c64d005bff2355ceb73835d62ed5a78ac321fc58c2c5b25c75e23fdf3ea",
-    "qr_vvip-pass.png": "5ca892d2c28a068c0a73e999377e75c93c1660e372c41be5b8a0ff3b87dd9577",
-    "qr_fanpit-pass.png": "fcb53f5e49ef4cc71141db96a59179da53bf3708817ca069d092aea09f564d5d",
-    "qr_gold-pass.png": "4826caccabdec9ef0859aec1f60091b4d87658684b406429ee743bcd8c386d03",
-    "qr_silver-pass.png": "3a806b4bf2031578ee9b8c0606310bb5a1ffaff882372c162dbd2d3109e3e4af",
+    "qr_mip-elite-pass.png": "b94d80dc92a165f02b840919de08c097f6e522b538bd29dfba123cd3243b3e59",
+    "qr_vvip-pass.png": "a4756f57afcb90b0eacb0ff6f2f0147b5b570c0404d09556ceda86d0428a7d3a",
+    "qr_fanpit-pass.png": "ba319357bd1c3d13fcdf918711da458b8fbacf2812e1e75d99ffd94605c30b17",
+    "qr_gold-pass.png": "8964978c7aa3ae4976ea78a24ea337e4dc4ca6515caa26cd7cd7bb2ba58103ad",
+    "qr_silver-pass.png": "2b68fd09c15adecf0cba4afd2b4e102466de32d29871d15e5018c1ef95feadcd",
 }
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")

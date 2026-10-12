@@ -23,7 +23,7 @@ def fetch(url):
 
 if __name__ == "__main__":
     detector = cv2.QRCodeDetector()
-    domain = BASE_URL.split("/hiphop-aadhi/")[0] + "/"
+    domain = BASE_URL.split("/star-galatta/")[0] + "/"
     site_root = sys.argv[1] if len(sys.argv) > 1 else domain
     failed, seen = 0, set()
     for slug, name, price, _, _ in TIERS:

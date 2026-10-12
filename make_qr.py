@@ -8,9 +8,9 @@ from PIL import Image, ImageDraw, ImageFont
 from prepare_passes import PASS_DIR, TIERS
 
 # FROZEN: this link is inside the printed QR codes. Never change it.
-BASE_URL = "https://events.iqtechmax.com/hiphop-aadhi/"
+BASE_URL = "https://events.iqtechmax.com/star-galatta/"
 SITE = "docs"
-EVENT_DIR = f"{SITE}/hiphop-aadhi"
+EVENT_DIR = f"{SITE}/star-galatta"
 QR_DIR = "qr"
 FONT = "C:/Windows/Fonts/arialbd.ttf"
 

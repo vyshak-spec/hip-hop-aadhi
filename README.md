@@ -4,7 +4,7 @@ Five fixed QR codes, one per booking level, for Star Galatta Salem 2026 (Sat Oct
 Vysya College, Salem). Each QR code opens only its own pass: the full ticket design followed by the
 pass name, price and event details.
 
-The site is the static `docs/` folder, served at `https://events.iqtechmax.com/hiphop-aadhi/`.
+The site is the static `docs/` folder, served at `https://events.iqtechmax.com/star-galatta/`.
 The pages are marked `noindex` and there is no index page linking them, so a pass page is reached
 by scanning its QR code (the links are not secret: anyone with the URL can open it).
 
@@ -15,11 +15,11 @@ Changing a ticket design, price text or the page layout only changes the page, n
 
 | Level | Price | QR image | QR link (fixed) |
 |---|---|---|---|
-| MIP Elite Pass | Rs 25,000 | `qr/qr_mip-elite-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/mip-elite-pass |
-| VVIP Pass | Rs 10,000 | `qr/qr_vvip-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/vvip-pass |
-| Fanpit Pass | Rs 2,499 | `qr/qr_fanpit-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/fanpit-pass |
-| Gold Pass | Rs 1,099 | `qr/qr_gold-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/gold-pass |
-| Silver Pass | Rs 599 | `qr/qr_silver-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/silver-pass |
+| MIP Elite Pass | Rs 25,000 | `qr/qr_mip-elite-pass.png` | https://events.iqtechmax.com/star-galatta/mip-elite-pass |
+| VVIP Pass | Rs 10,000 | `qr/qr_vvip-pass.png` | https://events.iqtechmax.com/star-galatta/vvip-pass |
+| Fanpit Pass | Rs 2,499 | `qr/qr_fanpit-pass.png` | https://events.iqtechmax.com/star-galatta/fanpit-pass |
+| Gold Pass | Rs 1,099 | `qr/qr_gold-pass.png` | https://events.iqtechmax.com/star-galatta/gold-pass |
+| Silver Pass | Rs 599 | `qr/qr_silver-pass.png` | https://events.iqtechmax.com/star-galatta/silver-pass |
 
 ## How updates work
 
@@ -32,9 +32,9 @@ Changing a ticket design, price text or the page layout only changes the page, n
 **Never rename or move these 5 folders in `docs/`:**
 
 ```
-hiphop-aadhi/mip-elite-pass    hiphop-aadhi/gold-pass
-hiphop-aadhi/vvip-pass         hiphop-aadhi/silver-pass
-hiphop-aadhi/fanpit-pass
+star-galatta/mip-elite-pass    star-galatta/gold-pass
+star-galatta/vvip-pass         star-galatta/silver-pass
+star-galatta/fanpit-pass
 ```
 
 If one must move, keep the old folder with an `index.html` that redirects to the new place.
@@ -51,15 +51,18 @@ cd /var/www
 git clone https://github.com/vyshak-spec/hip-hop-aadhi.git
 ```
 
-and add this block inside the existing `server { ... server_name events.iqtechmax.com; ... }`,
-then `sudo nginx -t && sudo systemctl reload nginx`:
+The Nginx file `/etc/nginx/sites-enabled/events` belongs to GenZ Bhajan, so this site's settings live
+in their own file, `/etc/nginx/snippets/star-galatta.conf`:
 
 ```nginx
-location /hiphop-aadhi/ {
+location ^~ /star-galatta/ {
     root /var/www/hip-hop-aadhi/docs;
     try_files $uri $uri/ =404;
 }
 ```
+
+The only change to the GenZ Bhajan file is one line in its HTTPS (`listen 443 ssl`) server block,
+`include snippets/star-galatta.conf;`. Then `sudo nginx -t && sudo systemctl reload nginx`.
 
 Auto-deploy (`.github/workflows/deploy.yml`) needs the repo secrets `DEPLOY_HOST`, `DEPLOY_USER`
 and `DEPLOY_SSH_KEY` (same values as the GenZ Bhajan repo). Until they are set the deploy step is
@@ -68,7 +71,7 @@ skipped with a warning.
 Then check: `python scripts/check_qr_links.py --live https://events.iqtechmax.com` and `python verify_qr.py`.
 
 A preview copy is also on GitHub Pages (from `main`, folder `/docs`), opened by typing the link:
-`https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/<level>-pass`. The QR codes do not use it.
+`https://vyshak-spec.github.io/hip-hop-aadhi/star-galatta/<level>-pass`. The QR codes do not use it.
 
 ## Layout
 
