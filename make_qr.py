@@ -7,7 +7,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 from prepare_passes import PASS_DIR, TIERS
 
-BASE_URL = "https://events.iqtechmax.com/hiphop-aadhi/"
+# Testing on GitHub Pages for now. Before printing, switch to the Hostinger domain and re-run:
+# BASE_URL = "https://events.iqtechmax.com/hiphop-aadhi/"
+BASE_URL = "https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/"
 SITE = "docs"
 EVENT_DIR = f"{SITE}/hiphop-aadhi"
 QR_DIR = "qr"

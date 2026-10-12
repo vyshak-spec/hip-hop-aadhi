@@ -8,7 +8,12 @@ The site is the static `docs/` folder, served at `https://events.iqtechmax.com/h
 The pages are marked `noindex` and there is no index page linking them, so a pass page is reached
 by scanning its QR code (the links are not secret: anyone with the URL can open it).
 
-| Level | Price | QR image | QR link |
+> **Testing phase:** the QR images in `qr/` currently point to the GitHub Pages copy
+> (`https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/<level>-pass`). Do not print them.
+> After the Hostinger server is set up, switch `BASE_URL` in `make_qr.py` to the
+> `events.iqtechmax.com` line, run `python make_qr.py`, and push; those are the codes to print.
+
+| Level | Price | QR image | Final QR link |
 |---|---|---|---|
 | MIP Elite Pass | Rs 25,000 | `qr/qr_mip-elite-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/mip-elite-pass |
 | VVIP Pass | Rs 10,000 | `qr/qr_vvip-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/vvip-pass |
