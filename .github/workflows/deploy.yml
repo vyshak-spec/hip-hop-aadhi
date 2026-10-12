@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two deploys at once.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  check-qr-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make sure all 5 printed QR links still exist
+        run: python3 scripts/check_qr_links.py
+
+  deploy:
+    needs: check-qr-links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pull the latest version on the server
+        id: pull
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          if [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_SSH_KEY" ]; then
+            echo "::warning::Deploy skipped: add DEPLOY_HOST, DEPLOY_USER and DEPLOY_SSH_KEY in Settings > Secrets and variables > Actions."
+            exit 0
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/deploy_key -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" \
+            "cd /var/www/hip-hop-aadhi && git fetch && git reset --hard origin/main"
+          rm -f ~/.ssh/deploy_key
+          echo "deployed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm the 5 QR links work on the live site
+        if: steps.pull.outputs.deployed == 'true'
+        run: python3 scripts/check_qr_links.py --live https://events.iqtechmax.com

@@ -1,0 +1,3 @@
+__pycache__/
+# Designer's print originals (CMYK, ~5 MB each); passes/ holds the web-ready copies
+*.jpg.jpeg
