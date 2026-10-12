@@ -7,9 +7,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 from prepare_passes import PASS_DIR, TIERS
 
-# Testing on GitHub Pages for now. Before printing, switch to the Hostinger domain and re-run:
-# BASE_URL = "https://events.iqtechmax.com/hiphop-aadhi/"
-BASE_URL = "https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/"
+# FROZEN: this link is inside the printed QR codes. Never change it.
+BASE_URL = "https://events.iqtechmax.com/hiphop-aadhi/"
 SITE = "docs"
 EVENT_DIR = f"{SITE}/hiphop-aadhi"
 QR_DIR = "qr"
@@ -106,6 +105,11 @@ def build_qr():
     os.makedirs(QR_DIR, exist_ok=True)
     big, small = ImageFont.truetype(FONT, 44), ImageFont.truetype(FONT, 30)
     for slug, name, price, _, _ in TIERS:
+        out = f"{QR_DIR}/qr_{slug}.png"
+        # The QR codes are frozen: never redraw one that exists (see scripts/check_qr_links.py).
+        if os.path.exists(out):
+            print(f"{out} kept (frozen)")
+            continue
         qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=20, border=4)
         url = BASE_URL + slug
         qr.add_data(url)
@@ -117,8 +121,8 @@ def build_qr():
         cx = code.width // 2
         draw.text((cx, code.height + 10), f"{name.upper()}  |  RS {price}", font=big, fill="black", anchor="mt")
         draw.text((cx, code.height + 70), "Star Galatta  ·  Salem 2026", font=small, fill="#444444", anchor="mt")
-        card.save(f"{QR_DIR}/qr_{slug}.png")
-        print(f"qr/qr_{slug}.png -> {url}")
+        card.save(out)
+        print(f"{out} -> {url}")
 
 
 if __name__ == "__main__":

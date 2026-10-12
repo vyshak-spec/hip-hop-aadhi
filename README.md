@@ -8,12 +8,12 @@ The site is the static `docs/` folder, served at `https://events.iqtechmax.com/h
 The pages are marked `noindex` and there is no index page linking them, so a pass page is reached
 by scanning its QR code (the links are not secret: anyone with the URL can open it).
 
-> **Testing phase:** the QR images in `qr/` currently point to the GitHub Pages copy
-> (`https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/<level>-pass`). Do not print them.
-> After the Hostinger server is set up, switch `BASE_URL` in `make_qr.py` to the
-> `events.iqtechmax.com` line, run `python make_qr.py`, and push; those are the codes to print.
+**The 5 QR codes are frozen.** The images in `qr/` are final and their pattern never changes:
+`make_qr.py` never redraws a QR image that exists, and `scripts/check_qr_links.py` holds the
+fingerprint (SHA-256) of each image, so any push that changes one fails and is not deployed.
+Changing a ticket design, price text or the page layout only changes the page, never the QR code.
 
-| Level | Price | QR image | Final QR link |
+| Level | Price | QR image | QR link (fixed) |
 |---|---|---|---|
 | MIP Elite Pass | Rs 25,000 | `qr/qr_mip-elite-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/mip-elite-pass |
 | VVIP Pass | Rs 10,000 | `qr/qr_vvip-pass.png` | https://events.iqtechmax.com/hiphop-aadhi/vvip-pass |
@@ -26,10 +26,10 @@ by scanning its QR code (the links are not secret: anyone with the URL can open 
 1. Edit the content (a ticket design → re-run `prepare_passes.py`; the page template in `make_qr.py`),
    then run `python make_qr.py` to rebuild `docs/`.
 2. Commit and push to `main`.
-3. GitHub Actions checks that all 5 printed QR links still exist, then updates the server
-   automatically. Progress is on the repo's **Actions** tab.
+3. GitHub Actions checks that all 5 printed QR links still exist and all 5 QR images are
+   unchanged, then updates the server automatically. Progress is on the repo's **Actions** tab.
 
-**Once the QR codes are printed, never rename or move these 5 folders in `docs/`:**
+**Never rename or move these 5 folders in `docs/`:**
 
 ```
 hiphop-aadhi/mip-elite-pass    hiphop-aadhi/gold-pass
@@ -41,9 +41,10 @@ If one must move, keep the old folder with an `index.html` that redirects to the
 A push that removes any of them fails the check and is not deployed (`scripts/check_qr_links.py`).
 Changing a ticket design is safe: the picture changes, the QR link does not.
 
-## Server setup (one time, Nginx)
+## Server setup (one time, Hostinger VPS, Nginx)
 
-The same server already hosts `events.iqtechmax.com` (GenZ Bhajan). Clone this repo next to it:
+The QR codes only work once this is done. The same Hostinger VPS already hosts
+`events.iqtechmax.com` (GenZ Bhajan), so no DNS change is needed. SSH in and clone this repo next to it:
 
 ```sh
 cd /var/www
@@ -64,19 +65,22 @@ Auto-deploy (`.github/workflows/deploy.yml`) needs the repo secrets `DEPLOY_HOST
 and `DEPLOY_SSH_KEY` (same values as the GenZ Bhajan repo). Until they are set the deploy step is
 skipped with a warning.
 
-Optional test copy on GitHub Pages: Settings → Pages → Deploy from branch `main`, folder `/docs`.
-It is then at `https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/<level>-pass`.
+Then check: `python scripts/check_qr_links.py --live https://events.iqtechmax.com` and `python verify_qr.py`.
+
+A preview copy is also on GitHub Pages (from `main`, folder `/docs`), opened by typing the link:
+`https://vyshak-spec.github.io/hip-hop-aadhi/hiphop-aadhi/<level>-pass`. The QR codes do not use it.
 
 ## Layout
 
-- `qr/` – the 5 printable QR images
+- `qr/` – the 5 printable QR images (frozen)
 - `passes/` – web-ready sRGB pass images (2200 px wide)
 - `docs/` – the published site (generated)
 - `prepare_passes.py` – the list of 5 levels; converts the designer's CMYK ticket files
   (`* Ticket.jpg.jpeg`, ~5 MB each, not committed; place them in the project root) into `passes/`
-- `make_qr.py` – builds `docs/` and the QR images (`BASE_URL` sets the link)
+- `make_qr.py` – builds `docs/`; draws a QR image only if it is missing (`BASE_URL` is the frozen link)
 - `verify_qr.py` – scans each QR and checks the live page shows that level's pass and nothing else
-- `scripts/check_qr_links.py` – fails if any of the 5 printed QR paths is missing (`--live URL` checks the site)
+- `scripts/check_qr_links.py` – fails if any of the 5 printed QR paths is missing or any QR image changed
+  (`--live URL` checks the site)
 - `.github/workflows/deploy.yml` – on every push to `main`: QR link check → deploy to server → live check
 
 ## Rebuild
@@ -91,4 +95,5 @@ python verify_qr.py        # after the deploy finishes
 ```
 
 To test before the server is set up: `cd docs && python -m http.server 8000`, then
-`python verify_qr.py http://localhost:8000/`.
+`python verify_qr.py http://localhost:8000/`, or against the preview:
+`python verify_qr.py https://vyshak-spec.github.io/hip-hop-aadhi/`.
