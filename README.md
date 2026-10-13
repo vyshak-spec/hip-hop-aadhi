@@ -24,8 +24,11 @@ a ticket design or the page layout changes the page and the label, never the QR 
 
 On Oct 13, 2026 ARI Entertainment renamed three levels (Fan Pit → Gold, Gold → Silver,
 Silver → Bronze, prices unchanged). The links keep the old names on purpose, since they are
-inside the QR codes; only the names shown on the pages and labels changed (`TIERS` in
-`prepare_passes.py`).
+inside the QR codes; only the names shown on the pages, the QR labels and the ticket pictures
+changed (`TIERS` in `prepare_passes.py`). The designer's artwork still prints the old names, so
+`prepare_passes.py` rewrites the name on each picture's side strip with `relabel.py` (same font,
+size, spacing and gold/silver finish; the price line and the rest of the artwork are untouched).
+If the designer sends updated artwork, set its printed name in `PRINTED` and the step is skipped.
 
 ## How updates work
 
@@ -86,7 +89,10 @@ A preview copy is also on GitHub Pages (from `main`, folder `/docs`), opened by 
 - `passes/` – web-ready sRGB pass images (2200 px wide)
 - `docs/` – the published site (generated)
 - `prepare_passes.py` – the list of 5 levels; converts the designer's CMYK ticket files
-  (`* Ticket.jpg.jpeg`, ~5 MB each, not committed; place them in the project root) into `passes/`
+  (`* Ticket.jpg.jpeg`, ~5 MB each, not committed; place them in the project root) into `passes/`,
+  replacing a printed name that no longer matches the level (`PRINTED`)
+- `relabel.py` – rewrites the pass name on a ticket's side strip in the artwork's own style
+- `fonts/` – Bebas Neue, the artwork's font (SIL Open Font License, `fonts/OFL.txt`)
 - `make_qr.py` – builds `docs/` and the QR cards from the frozen patterns (`BASE_URL` is the frozen link)
 - `verify_qr.py` – scans each QR and checks the live page shows that level's pass and nothing else
 - `scripts/check_qr_links.py` – fails if any of the 5 printed QR paths is missing or any QR pattern changed

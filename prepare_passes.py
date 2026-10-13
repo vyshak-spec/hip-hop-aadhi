@@ -15,6 +15,14 @@ TIERS = [
     ("silver-pass", "Bronze Pass", "599", "Silver ticket.jpg.jpeg", ("#7a3e17", "#cd7f32")),
 ]
 
+# The name the designer's artwork prints on the side strip, and its ink. Where it differs from the
+# pass name above, relabel.py replaces it on the picture (prices on the artwork are already right).
+PRINTED = {
+    "fanpit-pass": ("FANPIT PASS", "gold"),
+    "gold-pass": ("GOLD PASS", "gold"),
+    "silver-pass": ("SILVER PASS", "silver"),
+}
+
 PASS_DIR = "passes"
 WIDTH = 2200  # wide enough to zoom into the small print on a phone
 
@@ -29,9 +37,15 @@ def to_srgb(img):
 
 
 if __name__ == "__main__":
+    from relabel import relabel  # needs opencv and fonttools; only this build step uses it
+
     os.makedirs(PASS_DIR, exist_ok=True)
     for slug, name, price, source, _ in TIERS:
         img = to_srgb(Image.open(source))
+        printed, ink = PRINTED.get(slug, (name.upper(), None))
+        if printed != name.upper():
+            img = relabel(img, printed, name.upper(), ink)
+            print(f"  artwork name {printed} -> {name.upper()}")
         img = img.resize((WIDTH, round(img.height * WIDTH / img.width)), Image.LANCZOS)
         out = f"{PASS_DIR}/{slug}.jpg"
         img.save(out, quality=86, optimize=True, progressive=True)

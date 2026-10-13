@@ -1,3 +1,4 @@
 Pillow
 qrcode
 opencv-python-headless
+fonttools
