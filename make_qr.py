@@ -12,6 +12,7 @@ BASE_URL = "https://events.iqtechmax.com/star-galatta/"
 SITE = "docs"
 EVENT_DIR = f"{SITE}/star-galatta"
 QR_DIR = "qr"
+CODE_DIR = f"{QR_DIR}/code"  # the frozen QR patterns, without the label
 FONT = "C:/Windows/Fonts/arialbd.ttf"
 
 PAGE = """<!doctype html>
@@ -102,18 +103,21 @@ def build_site():
 
 
 def build_qr():
-    os.makedirs(QR_DIR, exist_ok=True)
+    os.makedirs(CODE_DIR, exist_ok=True)
     big, small = ImageFont.truetype(FONT, 44), ImageFont.truetype(FONT, 30)
     for slug, name, price, _, _ in TIERS:
         out = f"{QR_DIR}/qr_{slug}.png"
-        # The QR codes are frozen: never redraw one that exists (see scripts/check_qr_links.py).
-        if os.path.exists(out):
-            print(f"{out} kept (frozen)")
-            continue
-        qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=20, border=4)
-        url = BASE_URL + slug
-        qr.add_data(url)
-        code = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+        pattern = f"{CODE_DIR}/{slug}.png"
+        # The QR patterns are frozen: an existing one is reused as-is, never redrawn
+        # (see scripts/check_qr_links.py). Only the label under it is drawn fresh.
+        if os.path.exists(pattern):
+            code = Image.open(pattern).convert("RGB")
+        else:
+            qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=20, border=4)
+            qr.add_data(BASE_URL + slug)
+            code = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+            code.save(pattern)
+            print(f"{pattern} NEW pattern -> {BASE_URL + slug}")
 
         card = Image.new("RGB", (code.width, code.height + 130), "white")
         card.paste(code, (0, 0))
@@ -122,7 +126,7 @@ def build_qr():
         draw.text((cx, code.height + 10), f"{name.upper()}  |  RS {price}", font=big, fill="black", anchor="mt")
         draw.text((cx, code.height + 70), "Star Galatta  ·  Salem 2026", font=small, fill="#444444", anchor="mt")
         card.save(out)
-        print(f"{out} -> {url}")
+        print(f"{out} ({name}, Rs {price}) -> {BASE_URL + slug}")
 
 
 if __name__ == "__main__":

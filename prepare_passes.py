@@ -5,13 +5,14 @@ import os
 from PIL import Image, ImageCms
 
 # (slug, pass name, price, original ticket file, badge colours)
-# The slug is printed inside the QR code - never change it once the codes are out.
+# The slug is inside the printed QR code - never change it. The name and price can change freely:
+# the client renamed Fanpit -> Gold, Gold -> Silver, Silver -> Bronze, so those slugs keep the old names.
 TIERS = [
     ("mip-elite-pass", "MIP Elite Pass", "25,000", "MIP elite ticket.jpg.jpeg", ("#c4122f", "#f2b632")),
     ("vvip-pass", "VVIP Pass", "10,000", "VVIP Ticket.jpg.jpeg", ("#0f7a3c", "#e3b53b")),
-    ("fanpit-pass", "Fanpit Pass", "2,499", "Fanpit Ticket.jpg.jpeg", ("#d1491b", "#f2a23a")),
-    ("gold-pass", "Gold Pass", "1,099", "Gold Ticket.jpg.jpeg", ("#b8860b", "#f5d061")),
-    ("silver-pass", "Silver Pass", "599", "Silver ticket.jpg.jpeg", ("#1c4fd8", "#9fb3c8")),
+    ("fanpit-pass", "Gold Pass", "2,499", "Fanpit Ticket.jpg.jpeg", ("#b8860b", "#f5d061")),
+    ("gold-pass", "Silver Pass", "1,099", "Gold Ticket.jpg.jpeg", ("#5f6b78", "#c9d3dd")),
+    ("silver-pass", "Bronze Pass", "599", "Silver ticket.jpg.jpeg", ("#7a3e17", "#cd7f32")),
 ]
 
 PASS_DIR = "passes"
