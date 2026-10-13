@@ -5,22 +5,22 @@ import os
 from PIL import Image, ImageCms
 
 # (slug, pass name, price, original ticket file, badge colours)
-# The slug is inside the printed QR code - never change it. The name and price can change freely:
-# the client renamed Fanpit -> Gold, Gold -> Silver, Silver -> Bronze, so those slugs keep the old names.
+# The slug is inside the QR code - never change it once the codes are shared. The name and price
+# can change freely. The original ticket files keep the designer's old names (Fanpit, Gold, Silver).
 TIERS = [
     ("mip-elite-pass", "MIP Elite Pass", "25,000", "MIP elite ticket.jpg.jpeg", ("#c4122f", "#f2b632")),
     ("vvip-pass", "VVIP Pass", "10,000", "VVIP Ticket.jpg.jpeg", ("#0f7a3c", "#e3b53b")),
-    ("fanpit-pass", "Gold Pass", "2,499", "Fanpit Ticket.jpg.jpeg", ("#b8860b", "#f5d061")),
-    ("gold-pass", "Silver Pass", "1,099", "Gold Ticket.jpg.jpeg", ("#5f6b78", "#c9d3dd")),
-    ("silver-pass", "Bronze Pass", "599", "Silver ticket.jpg.jpeg", ("#7a3e17", "#cd7f32")),
+    ("gold-pass", "Gold Pass", "2,499", "Fanpit Ticket.jpg.jpeg", ("#b8860b", "#f5d061")),
+    ("silver-pass", "Silver Pass", "1,099", "Gold Ticket.jpg.jpeg", ("#5f6b78", "#c9d3dd")),
+    ("bronze-pass", "Bronze Pass", "599", "Silver ticket.jpg.jpeg", ("#7a3e17", "#cd7f32")),
 ]
 
 # The name the designer's artwork prints on the side strip, and its ink. Where it differs from the
 # pass name above, relabel.py replaces it on the picture (prices on the artwork are already right).
 PRINTED = {
-    "fanpit-pass": ("FANPIT PASS", "gold"),
-    "gold-pass": ("GOLD PASS", "gold"),
-    "silver-pass": ("SILVER PASS", "silver"),
+    "gold-pass": ("FANPIT PASS", "gold"),
+    "silver-pass": ("GOLD PASS", "gold"),
+    "bronze-pass": ("SILVER PASS", "silver"),
 }
 
 PASS_DIR = "passes"

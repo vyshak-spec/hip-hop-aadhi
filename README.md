@@ -18,14 +18,15 @@ a ticket design or the page layout changes the page and the label, never the QR 
 |---|---|---|---|
 | MIP Elite Pass | Rs 25,000 | `qr/qr_mip-elite-pass.png` | https://events.iqtechmax.com/star-galatta/mip-elite-pass |
 | VVIP Pass | Rs 10,000 | `qr/qr_vvip-pass.png` | https://events.iqtechmax.com/star-galatta/vvip-pass |
-| Gold Pass | Rs 2,499 | `qr/qr_fanpit-pass.png` | https://events.iqtechmax.com/star-galatta/fanpit-pass |
-| Silver Pass | Rs 1,099 | `qr/qr_gold-pass.png` | https://events.iqtechmax.com/star-galatta/gold-pass |
-| Bronze Pass | Rs 599 | `qr/qr_silver-pass.png` | https://events.iqtechmax.com/star-galatta/silver-pass |
+| Gold Pass | Rs 2,499 | `qr/qr_gold-pass.png` | https://events.iqtechmax.com/star-galatta/gold-pass |
+| Silver Pass | Rs 1,099 | `qr/qr_silver-pass.png` | https://events.iqtechmax.com/star-galatta/silver-pass |
+| Bronze Pass | Rs 599 | `qr/qr_bronze-pass.png` | https://events.iqtechmax.com/star-galatta/bronze-pass |
 
 On Oct 13, 2026 ARI Entertainment renamed three levels (Fan Pit → Gold, Gold → Silver,
-Silver → Bronze, prices unchanged). The links keep the old names on purpose, since they are
-inside the QR codes; only the names shown on the pages, the QR labels and the ticket pictures
-changed (`TIERS` in `prepare_passes.py`). The designer's artwork still prints the old names, so
+Silver → Bronze, prices unchanged). The codes were not printed yet, so the three links and QR
+codes were renamed to match (`gold-pass`, `silver-pass`, `bronze-pass`; `fanpit-pass` is gone).
+The designer's ticket files keep their old names (`Fanpit Ticket.jpg.jpeg` is now the Gold Pass,
+see `TIERS` in `prepare_passes.py`), and the artwork still prints the old names, so
 `prepare_passes.py` rewrites the name on each picture's side strip with `relabel.py` (same font,
 size, spacing and gold/silver finish; the price line and the rest of the artwork are untouched).
 If the designer sends updated artwork, set its printed name in `PRINTED` and the step is skipped.
@@ -41,9 +42,9 @@ If the designer sends updated artwork, set its printed name in `PRINTED` and the
 **Never rename or move these 5 folders in `docs/`:**
 
 ```
-star-galatta/mip-elite-pass    star-galatta/gold-pass
-star-galatta/vvip-pass         star-galatta/silver-pass
-star-galatta/fanpit-pass
+star-galatta/mip-elite-pass    star-galatta/silver-pass
+star-galatta/vvip-pass         star-galatta/bronze-pass
+star-galatta/gold-pass
 ```
 
 If one must move, keep the old folder with an `index.html` that redirects to the new place.

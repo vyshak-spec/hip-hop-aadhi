@@ -18,19 +18,20 @@ import urllib.request
 QR_PATHS = [
     "star-galatta/mip-elite-pass",
     "star-galatta/vvip-pass",
-    "star-galatta/fanpit-pass",
     "star-galatta/gold-pass",
     "star-galatta/silver-pass",
+    "star-galatta/bronze-pass",
 ]
 
 # SHA-256 of each frozen QR pattern (each encodes https://events.iqtechmax.com/<path>).
-# Cut pixel-for-pixel from the QR cards first shared on Oct 12, 2026.
+# MIP Elite and VVIP: cut from the cards first shared on Oct 12, 2026. Gold, Silver, Bronze:
+# redrawn on Oct 13, 2026 when their links were renamed to match the new pass names.
 QR_LOCK = {
     "mip-elite-pass.png": "bc75f49d9f24b97ed79cdb4f7962c5da883d52c7c3b6804206a6c5af3b995574",
     "vvip-pass.png": "76c5645178e0a520a53a99fa85e8c05876ae583623f5a8497ec182b2fed5a72c",
-    "fanpit-pass.png": "74deeb59718d59551e3260d08ee8913a342954fb8054a4457ffab4f87b9c101e",
     "gold-pass.png": "2c0ffae4cc841372a9b8086e5025178fa5a8ffd5db95b67309f9ac363e41bc63",
     "silver-pass.png": "e55b9c7eb6646bb2dc33a8f3b71e0882dda111e045c067001d1731d9400847fa",
+    "bronze-pass.png": "b70c18669e36e6c19b7273e3003701b7cba17c703223ae774393234edd6926f5",
 }
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
