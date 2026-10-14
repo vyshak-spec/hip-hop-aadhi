@@ -14,7 +14,7 @@ import urllib.request
 import cv2
 
 from make_qr import BASE_URL
-from prepare_passes import PASS_DIR, TIERS
+from prepare_passes import PASS_DIR, SIDES, TIERS
 
 
 def fetch(url):
@@ -34,11 +34,12 @@ if __name__ == "__main__":
         html, url = page.read().decode(), page.geturl()
         badge = re.search(r'class="tier">([^<]*)', html).group(1)
         badge = badge.replace("&middot;", "·").replace("&#8377;", "Rs ")
-        # every picture except the IQ Techmax mark must be this tier's pass
+        # every picture except the IQ Techmax mark must be this tier's pass: its front, then its back
         passes = [s for s in re.findall(r'<img src="([^"]*)"', html) if "iqtechmax" not in s]
-        same_pic = len(passes) == 1 and (
-            hashlib.md5(fetch(urllib.parse.urljoin(url, passes[0]))).digest()
-            == hashlib.md5(open(f"{PASS_DIR}/{slug}.jpg", "rb").read()).digest())
+        same_pic = len(passes) == len(SIDES) and all(
+            hashlib.md5(fetch(urllib.parse.urljoin(url, src))).digest()
+            == hashlib.md5(open(f"{PASS_DIR}/{slug}{side}.jpg", "rb").read()).digest()
+            for src, side in zip(passes, SIDES))
         ok = (scanned == BASE_URL + slug and scanned not in seen
               and badge == f"{name.upper()} · Rs {price}" and same_pic)
         seen.add(scanned)

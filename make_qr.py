@@ -5,7 +5,7 @@ import shutil
 import qrcode
 from PIL import Image, ImageDraw, ImageFont
 
-from prepare_passes import PASS_DIR, TIERS
+from prepare_passes import PASS_DIR, SIDES, TIERS
 
 # FROZEN: this link is inside the printed QR codes. Never change it.
 BASE_URL = "https://events.iqtechmax.com/star-galatta/"
@@ -42,29 +42,25 @@ PAGE = """<!doctype html>
   h1 {{ margin: 12px 0 6px; font-size: clamp(26px, 7vw, 38px); font-weight: 800; line-height: 1.05;
        letter-spacing: -.02em; }}
   .info {{ margin: 0; font-size: 15px; font-weight: 300; color: #d8cfc2; }}
-  .foot {{ display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
-          margin-top: 16px; }}
-  .brand {{ margin: 0; font-size: 12px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
-           color: #8d8579; }}
-  .powered {{ display: flex; align-items: center; gap: 8px; opacity: .85; }}
+  .powered {{ display: flex; align-items: center; gap: 8px; margin-top: 16px; opacity: .85; }}
   .powered span {{ font-size: 8px; font-weight: 600; letter-spacing: .24em; color: #fff; }}
   .powered img {{ display: block; width: 96px; height: auto; }}
 </style>
 </head>
 <body>
 <figure class="pass">
-  <a href="../img/{slug}.jpg"><img src="../img/{slug}.jpg" alt="Star Galatta Salem 2026 - {name}, Rs {price}"></a>
+  <a href="../img/{slug}.jpg"><img src="../img/{slug}.jpg" alt="Star Galatta Salem 2026 - {name}, Rs {price} (front)"></a>
 </figure>
-<p class="hint">Tap the pass to open it full size</p>
+<figure class="pass">
+  <a href="../img/{slug}-back.jpg"><img src="../img/{slug}-back.jpg" alt="Star Galatta Salem 2026 - {name}, Rs {price} (back)"></a>
+</figure>
+<p class="hint">Tap a side to open it full size</p>
 <figure>
   <div class="details">
     <span class="tier">{name_upper} &middot; &#8377;{price}</span>
     <h1>Star Galatta Salem 2026</h1>
     <p class="info">Sat, Oct 31 &middot; 5 &ndash; 10 PM &middot; Vysya College, Salem</p>
-    <div class="foot">
-      <p class="brand">Hiphop Aadhi &middot; Live in Concert</p>
-      <div class="powered"><span>POWERED BY</span><img src="../img/iqtechmax_white.png" alt="IQ Techmax"></div>
-    </div>
+    <div class="powered"><span>POWERED BY</span><img src="../img/iqtechmax_white.png" alt="IQ Techmax"></div>
   </div>
 </figure>
 </body>
@@ -93,7 +89,8 @@ def build_site():
     os.makedirs(f"{EVENT_DIR}/img")
     build_watermark(f"{EVENT_DIR}/img/iqtechmax_white.png")
     for slug, name, price, _, (c1, c2) in TIERS:
-        shutil.copy(f"{PASS_DIR}/{slug}.jpg", f"{EVENT_DIR}/img/{slug}.jpg")
+        for side in SIDES:
+            shutil.copy(f"{PASS_DIR}/{slug}{side}.jpg", f"{EVENT_DIR}/img/{slug}{side}.jpg")
         # A folder with index.html, so any web server answers the extension-less URL.
         os.makedirs(f"{EVENT_DIR}/{slug}")
         with open(f"{EVENT_DIR}/{slug}/index.html", "w", encoding="utf-8") as f:

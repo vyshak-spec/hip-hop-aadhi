@@ -1,7 +1,7 @@
 # Hiphop Aadhi – Star Galatta Salem 2026 – Booking Pass QR Codes
 
 Five fixed QR codes, one per booking level, for Star Galatta Salem 2026 (Sat Oct 31, 5–10 PM,
-Vysya College, Salem). Each QR code opens only its own pass: the full ticket design followed by the
+Vysya College, Salem). Each QR code opens only its own pass: the front of the ticket, then its back, followed by the
 pass name, price and event details.
 
 The site is the static `docs/` folder, served at `https://events.iqtechmax.com/star-galatta/`.
@@ -25,15 +25,14 @@ a ticket design or the page layout changes the page and the label, never the QR 
 On Oct 13, 2026 ARI Entertainment renamed three levels (Fan Pit → Gold, Gold → Silver,
 Silver → Bronze, prices unchanged). The codes were not printed yet, so the three links and QR
 codes were renamed to match (`gold-pass`, `silver-pass`, `bronze-pass`; `fanpit-pass` is gone).
-The designer's ticket files keep their old names (`Fanpit Ticket.jpg.jpeg` is now the Gold Pass,
-see `TIERS` in `prepare_passes.py`), and the artwork still prints the old names, so
-`prepare_passes.py` rewrites the name on each picture's side strip with `relabel.py` (same font,
-size, spacing and gold/silver finish; the price line and the rest of the artwork are untouched).
-If the designer sends updated artwork, set its printed name in `PRINTED` and the step is skipped.
+On Oct 14, 2026 the designer sent new artwork, a front and a back for each pass, already printing
+the new names. The back prints the pass's own QR code (checked module by module against
+`qr/code/`). If artwork ever prints an outdated name again, set it in `PRINTED` in
+`prepare_passes.py` and `relabel.py` rewrites the name on the side strip in the artwork's own style.
 
 ## How updates work
 
-1. Edit the content (a ticket design → re-run `prepare_passes.py`; the page template in `make_qr.py`),
+1. Edit the content (a ticket design, front or back → re-run `prepare_passes.py`; the page template in `make_qr.py`),
    then run `python make_qr.py` to rebuild `docs/`.
 2. Commit and push to `main`.
 3. GitHub Actions checks that all 5 printed QR links still exist and all 5 QR patterns are
@@ -87,10 +86,10 @@ A preview copy is also on GitHub Pages (from `main`, folder `/docs`), opened by 
 
 - `qr/` – the 5 printable QR cards (frozen pattern + current label)
 - `qr/code/` – the 5 frozen QR patterns (never edit)
-- `passes/` – web-ready sRGB pass images (2200 px wide)
+- `passes/` – web-ready sRGB pass images, 2200 px wide (`<level>.jpg` front, `<level>-back.jpg` back)
 - `docs/` – the published site (generated)
-- `prepare_passes.py` – the list of 5 levels; converts the designer's CMYK ticket files
-  (`* Ticket.jpg.jpeg`, ~5 MB each, not committed; place them in the project root) into `passes/`,
+- `prepare_passes.py` – the list of 5 levels; converts the designer's front and back ticket files
+  (`*.jpg.jpeg`, ~3 MB each, not committed; place them in `passes/`, names in `TIERS`) into `passes/`,
   replacing a printed name that no longer matches the level (`PRINTED`)
 - `relabel.py` – rewrites the pass name on a ticket's side strip in the artwork's own style
 - `fonts/` – Bebas Neue, the artwork's font (SIL Open Font License, `fonts/OFL.txt`)
